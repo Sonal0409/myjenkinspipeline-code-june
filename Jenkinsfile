@@ -13,6 +13,17 @@ pipeline{
             steps{
               sh 'mvn pmd:pmd'
             }
+            post{
+                always{
+                    echo 'Code Quality Check is completed'
+                }
+                success{
+                    recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [pmdParser(pattern: '**/pmd.xml')]
+                }
+                failure{
+                    echo 'Code Quality Check is failed'
+                }
+            }
         }
         stage('Compile the code'){
             steps{
